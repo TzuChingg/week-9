@@ -1,6 +1,7 @@
 let productList = document.querySelector(".productWrap");
 let shopCarts = document.querySelector(".shoppingCart-table");
-// let clearCarts = document.querySelector('.discardAllBtn')
+let buyerForm = document.querySelector('.orderInfo-form')
+// =============== 監聽 ===============
 let localProduct = {}; // 商品數列表，API POST數量、渲染用資料
 productList.addEventListener("click", (el) => {
   // 防止跳轉
@@ -33,6 +34,46 @@ shopCarts.addEventListener("click", (el) => {
   }
 });
 
+// 頁面篩選
+const productSelector = document.querySelector(".productSelect");
+productSelector.addEventListener("change", (el) => {
+  const productCard = document.querySelectorAll(".productCard");
+  productCard.forEach((item) => {
+    if (el.target.value === "全部") {
+      item.removeAttribute("style");
+    } else {
+      if (item.dataset.category !== el.target.value) {
+        item.setAttribute("style", "display:none");
+      } else {
+        item.removeAttribute("style");
+      }
+    }
+  });
+});
+
+
+//買方資訊表
+buyerForm.addEventListener('blur', (el) => {
+
+    blur(el.target.getAttribute('id'))
+})
+
+function blur(id){
+    let formItem = document.getElementById(`${id}`)
+    formItem.addEventListener('blur', (el) => {
+        if (el.target.value === ''){
+            let alertNode = document.createElement('p')
+            alertNode.setAttribute('class', 'orderInfo-message')
+            alertNode.setAttribute('data-message', el.target.name)
+            alertNode.innerHTML = '必填'
+            formItem.insertAdjacentElement('afterend ', alertNode)
+        }
+    })
+
+}
+
+
+// =============== 頁面初始化 ===============
 // API抓取商品表
 axios
   .get(
@@ -53,14 +94,16 @@ axios
         <h3>${item.title}</h3>
         <del class="originPrice">NT$${item.origin_price}</del>
         <p class="nowPrice">NT$${item.price}</p>
-      </li>`;
+        </li>`;
     });
     productList.innerHTML = productText;
-  })
-  .catch((err) => {
+    clearCarts(); // 清理購物車
+})
+.catch((err) => {
     console.log(err);
-  });
+});
 
+// =============== function ===============
 // API新增品項
 function addCarts(productId) {
   if (typeof localProduct[productId] == "undefined") {
@@ -168,21 +211,5 @@ function getCarts() {
     });
 }
 
-clearCarts();
 
-// 頁面篩選
-const productSelector = document.querySelector(".productSelect");
-productSelector.addEventListener("change", (el) => {
-  const productCard = document.querySelectorAll(".productCard");
-  productCard.forEach((item) => {
-    if (el.target.value === "全部") {
-      item.removeAttribute("style");
-    } else {
-      if (item.dataset.category !== el.target.value) {
-        item.setAttribute("style", "display:none");
-      } else {
-        item.removeAttribute("style");
-      }
-    }
-  });
-});
+
