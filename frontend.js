@@ -1,6 +1,6 @@
 let productList = document.querySelector(".productWrap");
 let shopCarts = document.querySelector(".shoppingCart-table");
-let buyerForm = document.querySelector('.orderInfo-form')
+let buyerForm = document.querySelector(".orderInfo-form");
 // =============== 監聽 ===============
 let localProduct = {}; // 商品數列表，API POST數量、渲染用資料
 productList.addEventListener("click", (el) => {
@@ -51,26 +51,15 @@ productSelector.addEventListener("change", (el) => {
   });
 });
 
-
 //買方資訊表
-buyerForm.addEventListener('blur', (el) => {
-
-    blur(el.target.getAttribute('id'))
+buyerForm.addEventListener("input", (el) => {
+  let alertText = document.querySelector(`[data-message='${el.target.name}']`)
+  if (el.target.value ===''){
+    alertText.removeAttribute('style')
+  }else{
+    alertText.setAttribute('style', 'display:none;')
+  }
 })
-
-function blur(id){
-    let formItem = document.getElementById(`${id}`)
-    formItem.addEventListener('blur', (el) => {
-        if (el.target.value === ''){
-            let alertNode = document.createElement('p')
-            alertNode.setAttribute('class', 'orderInfo-message')
-            alertNode.setAttribute('data-message', el.target.name)
-            alertNode.innerHTML = '必填'
-            formItem.insertAdjacentElement('afterend ', alertNode)
-        }
-    })
-
-}
 
 
 // =============== 頁面初始化 ===============
@@ -98,10 +87,10 @@ axios
     });
     productList.innerHTML = productText;
     clearCarts(); // 清理購物車
-})
-.catch((err) => {
+  })
+  .catch((err) => {
     console.log(err);
-});
+  });
 
 // =============== function ===============
 // API新增品項
@@ -210,6 +199,3 @@ function getCarts() {
       console.log(err);
     });
 }
-
-
-
