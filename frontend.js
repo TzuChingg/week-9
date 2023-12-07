@@ -180,7 +180,7 @@ function updateProductList() {
             res.data.carts.forEach((item) => {
                 formContent += `<tr><td>
         <div class="cardItem-title">
-          <img src="https://i.imgur.com/HvT3zlU.png" alt="" />
+          <img src="${item.product.images}" alt="" />
           <p>${item.product.title}</p>
         </div>
       </td>
